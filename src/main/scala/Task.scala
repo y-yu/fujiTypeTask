@@ -16,7 +16,7 @@ trait Task[-R, +A] {lhs =>
 
   def map[B](f: A => B): Task[R, B] = flatMap(a => Task(f(a)))
 
-  def run[RR]()(implicit runner: TaskRunner[R], RR: RR <+< R): Future[A] = runner.run(this)
+  def run()(implicit runner: TaskRunner[R]): Future[A] = runner.run(this)
 }
 
 object Task {
