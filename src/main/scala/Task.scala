@@ -4,7 +4,6 @@ import scala.concurrent.Future
 trait Task[-R, +A] {lhs =>
   def execute[RR](resource: RR)(implicit ec: ExecutionContext, RR: RR <+< R): Future[A]
 
-
   def flatMap[RR, B](f: A => Task[RR, B])(implicit RR: RR <+< R): Task[RR, B] =
     new Task[RR, B] {
       def execute[RRR](resource: RRR)(implicit ec: ExecutionContext, RRR: RRR <+< RR): Future[B] = {

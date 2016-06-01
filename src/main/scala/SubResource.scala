@@ -3,6 +3,7 @@ trait <-<[-A, +B]
 trait <+<[-A, +B]
 
 object <+< {
+
   implicit def self[A] = new (A <+< A) {}
 
   implicit def any[A] = new (A <+< Any) {}
