@@ -1,7 +1,7 @@
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 
-trait Task[-R, +A] {lhs =>
+trait Task[R, +A] {lhs =>
   def execute[RR](resource: RR)(implicit ec: ExecutionContext, RR: RR <*< R): Future[A]
 
   def flatMap[RR, B](f: A => Task[RR, B])(implicit RR: RR <*< R): Task[RR, B] =

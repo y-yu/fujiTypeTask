@@ -1,7 +1,7 @@
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-trait TaskRunner[+R] {
+trait TaskRunner[R] {
   def run[A](task: Task[R, A]): Future[A]
 }
 
@@ -24,13 +24,6 @@ object TaskRunner {
     def run[A](task: Task[R, A]): Future[A] = {
       println("read batch task")
       task.execute(ReadBatchTransaction())
-    }
-  }
-
-  implicit def readWriteBatchRunner[R](implicit R: ReadWriteBatchTransaction <*< R) = new TaskRunner[R] {
-    def run[A](task: Task[R, A]): Future[A] = {
-      println("read write batch task")
-      task.execute(ReadWriteBatchTransaction())
     }
   }
 }
