@@ -33,5 +33,17 @@ object Main {
         c <- t3
       } yield ()).run()
     }
+
+    {
+      import Implicits._
+      import TaskRunner.readWriteRunner
+
+      (for {
+        a <- t1
+        b <- t2
+        c <- t3
+        d <- Task.ask[ReadWriteTransaction]
+      } yield ()).run()
+    }
   }
 }
