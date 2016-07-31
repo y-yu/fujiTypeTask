@@ -7,3 +7,5 @@ scalaVersion := "2.11.8"
 scalapropsWithScalazlaws
 
 scalapropsVersion := "0.3.3"
+
+//scalacOptions += "-Xprint:typer"

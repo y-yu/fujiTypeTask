@@ -6,24 +6,24 @@ trait TaskRunner[R] {
 }
 
 object TaskRunner {
-  implicit def readRunner[R](implicit R: ReadTransaction <*< R) = new TaskRunner[R] {
-    def run[A](task: Task[R, A]): Future[A] = {
+  implicit val readRunner = new TaskRunner[ReadTransaction] {
+    def run[A](task: Task[ReadTransaction, A]): Future[A] = {
       println("read task")
-      task.execute(ReadTransaction())
+      task.execute()
     }
   }
 
-  implicit def readWriteRunner[R](implicit R: ReadWriteTransaction <*< R) = new TaskRunner[R] {
-    def run[A](task: Task[R, A]): Future[A] = {
+  implicit val readWriteRunner = new TaskRunner[ReadWriteTransaction] {
+    def run[A](task: Task[ReadWriteTransaction, A]): Future[A] = {
       println("write task")
-      task.execute(ReadWriteTransaction())
+      task.execute()
     }
   }
 
-  implicit def readBatchRunner[R](implicit R: ReadBatchTransaction <*< R) = new TaskRunner[R] {
-    def run[A](task: Task[R, A]): Future[A] = {
+  implicit val readBatchRunner = new TaskRunner[ReadBatchTransaction] {
+    def run[A](task: Task[ReadBatchTransaction, A]): Future[A] = {
       println("read batch task")
-      task.execute(ReadBatchTransaction())
+      task.execute()
     }
   }
 }

@@ -7,7 +7,7 @@ object TaskTest extends Scalaprops {
 
   implicit def taskMonadInstance[R, A] = new Monad[({type L[B] = Task[R, B]})#L] {
     def point[B](a: => B): Task[R, B] = Task(a)
-    def bind[B, C](a: Task[R, B])(f: B => Task[R, C]): Task[R, C] = a.flatMap(f)
+    def bind[B, C](a: Task[R, B])(f: B => Task[R, C]): Task[R, C] = a.flatMap[R, R, C](f)
   }
 
   type ReadTransactionTask[A] = Task[ReadTransaction, A]

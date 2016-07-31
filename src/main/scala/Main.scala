@@ -1,3 +1,5 @@
+import scala.concurrent.Await
+import scala.concurrent.duration._
 
 object Main {
   def main(args: Array[String]): Unit = {
@@ -36,14 +38,45 @@ object Main {
 
     {
       import Implicits._
-      import TaskRunner.readWriteRunner
+      import TaskRunner.readRunner
+      import scala.concurrent.ExecutionContext.Implicits.global
 
-      (for {
-        a <- t1
-        b <- t2
-        c <- t3
-        d <- Task.ask[ReadWriteTransaction]
-      } yield ()).run()
+      def f(x: Int): Task[ReadTransaction, String] = Task(x.toString)
+      Await.ready((for {
+        a <- Task[Transaction, Int](5).flatMap(f)
+        b <- f(5)
+      } yield {
+        println(a == b)
+      }).run(), 5 seconds)
+    }
+
+    {
+      import Implicits._
+      import TaskRunner.readRunner
+      import scala.concurrent.ExecutionContext.Implicits.global
+
+      Await.ready((for {
+        a <- t1.flatMap(a => Task[Transaction, Int](a))
+        b <- t1
+      } yield {
+        println(a == b)
+      }).run(), 5 seconds)
+    }
+
+    {
+      import Implicits._
+      import TaskRunner.readWriteRunner
+      import scala.concurrent.ExecutionContext.Implicits.global
+
+      def f(x: Int): Task[ReadTransaction, String] = Task(x.toString)
+      def g(x: String): Task[ReadWriteTransaction, Double] = Task(1.5)
+
+      Await.ready((for {
+        a <- t1.flatMap(f).flatMap(g)
+        b <- t1.flatMap(x => f(x).flatMap(g))
+      } yield {
+        println(a == b)
+      }).run(), 5 seconds)
     }
   }
 }

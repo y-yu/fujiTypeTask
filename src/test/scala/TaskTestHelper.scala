@@ -38,7 +38,7 @@ object TaskTestHelper {
   implicit def genTaskRunner[R](implicit R: Gen[R]): Gen[TaskRunner[R]] =
     R.map[TaskRunner[R]] {
       r => new TaskRunner[R] {
-        def run[A](f: Task[R, A]): Future[A] = f.execute(r)
+        def run[A](f: Task[R, A]): Future[A] = f.execute()
       }
     }
 
@@ -49,13 +49,13 @@ object TaskTestHelper {
     Gen.frequency(
       1 -> E.map[Task[R, A]] { e =>
         new Task[R, A] {
-          def execute[RR](res: RR)(implicit ec: ExecutionContext, RR: RR <*< R): Future[A] =
+          def execute()(implicit ec: ExecutionContext): Future[A] =
             Future.failed(e)
         }
       },
       2 -> A.map[Task[R, A]] { a =>
         new Task[R, A] {
-          def execute[RR](res: RR)(implicit ec: ExecutionContext, RR: RR <*< R): Future[A] =
+          def execute()(implicit ec: ExecutionContext): Future[A] =
             Future.successful(a)
         }
       }

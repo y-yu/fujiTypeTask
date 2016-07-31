@@ -7,12 +7,10 @@ case class ReadWriteTransaction()
 case class ReadBatchTransaction()
 
 object Implicits {
-  implicit val read = new (ReadTransaction <-< Transaction) {}
+  implicit val read = new ((ReadTransaction :+: Transaction) :-> ReadTransaction) {}
 
-  implicit val readwrite = new (ReadWriteTransaction <-< ReadTransaction) {}
+  implicit val readwrite = new ((ReadWriteTransaction :+: ReadTransaction) :-> ReadWriteTransaction) {}
 
-  implicit val readBatch = new (ReadBatchTransaction <-< ReadTransaction) {}
-
-  //implicit val ng = new (Transaction <-< ReadBatchTransaction) {}
+  implicit val readBatch = new ((ReadBatchTransaction :+: ReadTransaction) :-> ReadBatchTransaction) {}
 }
 
