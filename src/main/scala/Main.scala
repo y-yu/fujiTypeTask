@@ -39,7 +39,6 @@ object Main {
     {
       import Implicits._
       import TaskRunner.readRunner
-      import scala.concurrent.ExecutionContext.Implicits.global
 
       def f(x: Int): Task[ReadTransaction, String] = Task(x.toString)
       Await.ready((for {
@@ -53,7 +52,6 @@ object Main {
     {
       import Implicits._
       import TaskRunner.readRunner
-      import scala.concurrent.ExecutionContext.Implicits.global
 
       Await.ready((for {
         a <- t1.flatMap(a => Task[Transaction, Int](a))
@@ -66,7 +64,6 @@ object Main {
     {
       import Implicits._
       import TaskRunner.readWriteRunner
-      import scala.concurrent.ExecutionContext.Implicits.global
 
       def f(x: Int): Task[ReadTransaction, String] = Task(x.toString)
       def g(x: String): Task[ReadWriteTransaction, Double] = Task(1.5)
