@@ -30,13 +30,21 @@ trait Task[R, +A] {lhs =>
 object Task {
   def apply[R, A](a: => A): Task[R, A] =
     new Task[R, A] {
-      def execute[RR](resource: RR)(implicit ec: ExecutionContext, RR: RR <*< R): Future[A] =
+      def execute[RR](res: RR)(implicit ec: ExecutionContext, RR: RR <*< R): Future[A] =
         Future(a)
     }
 
+  def point[A](a: => A): Task[Any, A] = Task(a)
+
   def ask[R]: Task[R, R] =
     new Task[R, R] { lhs =>
-      def execute[RR](res: RR)(implicit ec: ExecutionContext, RRR: RR <*< R): Future[R] =
+      def execute[RR](res: RR)(implicit ec: ExecutionContext, RR: RR <*< R): Future[R] =
         lhs.execute(res)
+    }
+
+  def failed(a: Throwable): Task[Any, Nothing] =
+    new Task[Any, Nothing] {
+      def execute[R](res: R)(implicit ec: ExecutionContext, R: R <*< Any): Future[Nothing] =
+        Future.failed(a)
     }
 }
