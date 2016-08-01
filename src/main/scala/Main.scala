@@ -7,6 +7,7 @@ object Main {
     val t2 = Task[ReadTransaction, String]("string")
     val t3 = Task[ReadWriteTransaction, Boolean](true)
     val t4 = Task[ReadBatchTransaction, Double](1.0)
+    val t5 = Task[ReadWriteBatchTransaction, Unit]()
 
     {
       import TaskRunner.readRunner
@@ -33,6 +34,19 @@ object Main {
         a <- t1
         b <- t2
         c <- t3
+      } yield ()).run()
+    }
+
+    {
+      import Implicits._
+      import TaskRunner.readWriteRunner
+
+      t4.flatMap(_ => t3)
+      (for {
+        a <- t5
+        b <- t2
+        c <- t4
+        e <- t3
       } yield ()).run()
     }
 

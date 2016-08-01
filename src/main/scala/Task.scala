@@ -11,7 +11,7 @@ trait Task[R, +A] {lhs =>
       }
     }
 
-  def map[S, T, B](f: A => B)(implicit R: (R :+: S) :*> T): Task[T, B] = flatMap(a => Task[S, B](f(a)))
+  def map[B](f: A => B): Task[R, B] = flatMap[R, R, B](a => Task[R, B](f(a)))
 
   def sub[S, T](implicit R: (R :+: S) :*> T): Task[T, A] =
     new Task[T, A] {

@@ -8,10 +8,11 @@ case class ReadBatchTransaction()
 
 case class ReadWriteBatchTransaction()
 
-object Implicits {
-  //implicit val read = new ((ReadTransaction :+: Transaction) :-> ReadTransaction) {}
-  //implicit val readwrite = new ((ReadWriteTransaction :+: ReadTransaction) :-> ReadWriteTransaction) {}
-  //implicit val readBatch = new ((ReadBatchTransaction :+: ReadTransaction) :-> ReadBatchTransaction) {}
+trait Base {
+  implicit val readWriteBatch2 = new (ReadWriteBatchTransaction <-< ReadBatchTransaction) {}
+}
+
+object Implicits extends Base {
   implicit val read = new (ReadTransaction <-< Transaction) {}
 
   implicit val readWrite = new (ReadWriteTransaction <-< ReadTransaction) {}
@@ -19,7 +20,5 @@ object Implicits {
   implicit val readBatch = new (ReadBatchTransaction <-< ReadTransaction) {}
 
   implicit val readWriteBatch1 = new (ReadWriteBatchTransaction <-< ReadWriteTransaction) {}
-
-  implicit val readWriteBatch2 = new (ReadWriteBatchTransaction <-< ReadBatchTransaction) {}
 }
 

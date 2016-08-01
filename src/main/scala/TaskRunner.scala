@@ -26,4 +26,11 @@ object TaskRunner {
       task.execute()
     }
   }
+
+  implicit val readWriteBatchRunner = new TaskRunner[ReadWriteBatchTransaction] {
+    def run[A](task: Task[ReadWriteBatchTransaction, A]): Future[A] = {
+      println("read write batch task")
+      task.execute()
+    }
+  }
 }
