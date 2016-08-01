@@ -5,18 +5,12 @@ trait <-<[A, B]
 @implicitNotFound("Cannot find instances of the type ${A} <*< ${B}")
 trait <*<[A, B]
 
-trait <+<[A, B]
-
 trait :+:[A, B]
 
 trait :->[A <: (_ :+: _), B]
 
-trait :!->[A, B]
-
 @implicitNotFound("Cannot find instances of the type ${A} :*> ${B}")
 trait :*>[A, B]
-
-trait :!*>[A, B]
 
 trait :!=:[A, B]
 
@@ -38,20 +32,6 @@ object :*> {
   implicit def self[A]: (A :+: A) :*> A = new ((A :+: A) :*> A) {}
 
   implicit def moreOneStep[A, B, C](implicit A: C <-< A, B: C <*< B, ev: C :!=: B): ((A :+: B) :*> C) = new ((A :+: B) :*> C) {}
-}
-
-object :!-> {
-  implicit def ambiguous1[A, B, C](implicit R: (A :+: B) :-> C): ((A :+: B) :!-> C) = sys.error("Unexpected call")
-  implicit def ambiguous2[A, B, C](implicit R: (A :+: B) :-> C): ((A :+: B) :!-> C) = sys.error("Unexpected call")
-
-  implicit def not[A, B, C]: ((A :+: B) :!-> C) = new ((A :+: B) :!-> C) {}
-}
-
-object :!*> {
-  implicit def ambiguous1[A, B, C](implicit R: (A :+: B) :*> C): ((A :+: B) :!*> C) = sys.error("Unexpected call")
-  implicit def ambiguous2[A, B, C](implicit R: (A :+: B) :*> C): ((A :+: B) :!*> C) = sys.error("Unexpected call")
-
-  implicit def not[A, B, C]: ((A :+: B) :!*> C) = new ((A :+: B) :!*> C) {}
 }
 
 object :!=: {
