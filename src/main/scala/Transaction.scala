@@ -8,11 +8,11 @@ case class ReadBatchTransaction()
 
 case class ReadWriteBatchTransaction()
 
-trait Base {
+trait LowPriorityImplicit {
   implicit val readWriteBatch2 = new (ReadWriteBatchTransaction <-< ReadBatchTransaction) {}
 }
 
-object Implicits extends Base {
+object Implicits extends LowPriorityImplicit {
   implicit val read = new (ReadTransaction <-< Transaction) {}
 
   implicit val readWrite = new (ReadWriteTransaction <-< ReadTransaction) {}
