@@ -10,12 +10,12 @@ trait :+:[A, B]
 trait :->[A <: (_ :+: _), B]
 
 @implicitNotFound("Cannot find instances of the type ${A} :*> ${B}")
-trait :*>[A, B]
+trait :*>[A <: (_ :+: _), B]
 
 trait :!=:[A, B]
 
 object <*< {
-  implicit def self[A]: A <*< A = new (A <*< A) {}
+  implicit def one[A, B](implicit A: A <-< B): A <*< B = new (A <*< B) {}
 
   implicit def transitive[A, B, C](implicit A: A <-< B, B: B <*< C): A <*< C = new (A <*< C) {}
 }
@@ -29,9 +29,9 @@ object :*> {
 
   implicit def commutative[A, B, C](implicit R: (A :+: B) :-> C): ((B :+: A) :*> C) = new ((B :+: A) :*> C) {}
 
-  implicit def self[A]: (A :+: A) :*> A = new ((A :+: A) :*> A) {}
+  implicit def moreOneStep[A, B, C](implicit A: C <*< A, B: C <*< B): ((A :+: B) :*> C) = new ((A :+: B) :*> C) {}
 
-  implicit def moreOneStep[A, B, C](implicit A: C <-< A, B: C <*< B, ev: C :!=: B): ((A :+: B) :*> C) = new ((A :+: B) :*> C) {}
+  implicit def self[A]: (A :+: A) :*> A = new ((A :+: A) :*> A) {}
 }
 
 object :!=: {

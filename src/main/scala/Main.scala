@@ -39,12 +39,11 @@ object Main {
 
     {
       import Implicits._
-      import TaskRunner.readWriteRunner
+      import TaskRunner.readWriteBatchRunner
 
-      t4.flatMap(_ => t3)
       (for {
         a <- t5
-        b <- t2
+        b <- t2.sub[ReadWriteTransaction]
         c <- t4
         e <- t3
       } yield ()).run()

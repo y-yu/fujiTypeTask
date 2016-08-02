@@ -11,10 +11,10 @@ trait Task[R, +A] {lhs =>
       }
     }
 
-  def map[B](f: A => B): Task[R, B] = flatMap[R, R, B](a => Task[R, B](f(a)))
+  def map[S, T, B](f: A => B)(implicit R: (R :+: S) :*> T): Task[T, B] = flatMap(a => Task[S, B](f(a)))
 
-  def sub[S, T](implicit R: (R :+: S) :*> T): Task[T, A] =
-    new Task[T, A] {
+  def sub[S](implicit R: (R :+: S) :*> S): Task[S, A] =
+    new Task[S, A] {
       def execute()(implicit ec: ExecutionContext): Future[A] = {
         lhs.execute()
       }
